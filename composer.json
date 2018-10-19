@@ -20,7 +20,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Mitoop\\AliOSS\\AliOSServiceProvider"
+        "Mitoop\\AliOSS\\AliOSSServiceProvider"
       ]
     }
   }

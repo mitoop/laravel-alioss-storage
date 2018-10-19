@@ -1,0 +1,27 @@
+{
+  "name": "mitoop/laravel-alioss-storage",
+  "description": "Aliyun OSS storage in laravel.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "mitoop",
+      "email": "037333@gmail.com"
+    }
+  ],
+  "require": {
+    "aliyuncs/oss-sdk-php": "^2.3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Mitoop\\AliOSS\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Mitoop\\AliOSS\\AliOSServiceProvider"
+      ]
+    }
+  }
+}

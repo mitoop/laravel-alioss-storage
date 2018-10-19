@@ -20,6 +20,6 @@ class SignUrl extends AbstractPlugin
 
     public function handle($object, $timeout = 60 * 60 * 8, $method = OssClient::OSS_HTTP_GET)
     {
-        return $this->getDriver()->getAdapter()->signUrl($object, $timeout, $method);
+        return $this->filesystem->getAdapter()->signUrl($object, $timeout, $method);
     }
 }

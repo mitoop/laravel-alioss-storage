@@ -27,7 +27,7 @@ class PutRemoteFile extends AbstractPlugin
 
         $resource = fopen($remoteUrl, 'r');
 
-        return (bool)$this->getDriver()->getAdapter()->writeStream($path, $resource, $config);
+        return (bool)$this->filesystem->getAdapter()->writeStream($path, $resource, $config);
     }
 
 }

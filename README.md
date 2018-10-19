@@ -29,7 +29,7 @@ Storage::cloud()->put('file.tetx', 'hello world');
 如果是默认驱动
 Storage::put('file.tetx', 'hello world');
 只在laravel 5.7下作了测试 目前兼容Storage方法, 适配器新增了signUrl方法 去除了putFile方法
-对于getUrl方法作了调整, 去除了远端验证, 增加 url schrma 兼容处理, 删除方法去除了远端验证(阿里云oss为原子操作, 没必要).
+对于getUrl方法作了调整, 去除了远端验证, 增加 url schema 兼容处理, 删除方法去除了远端验证(阿里云oss为原子操作, 没必要).
 ```
 
 

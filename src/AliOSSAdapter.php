@@ -250,7 +250,7 @@ class AliOSSAdapter extends AbstractAdapter
             return false;
         }
 
-        return ! $this->has($path);
+        return true;
     }
 
     /**
@@ -672,9 +672,9 @@ class AliOSSAdapter extends AbstractAdapter
     protected function logErr($func, OssException $e)
     {
         Log::error('aliyun_oss_error:'.$func, [
-            'status'  => $e->getHTTPStatus(),
-            'msg'     => $e->getMessage(),
-            'details' => $e->getDetails(),
+            'status'     => $e->getHTTPStatus(),
+            'msg'        => $e->getMessage(),
+            'request_id' => $e->getRequestId(),
         ]);
     }
 }

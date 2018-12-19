@@ -27,10 +27,11 @@ class AliOSSServiceProvider extends ServiceProvider
             $bucket    = $config['bucket'];
             $endPoint  = $config['endpoint'];
 
+            $isCnname = (bool)$config['is_cnname'];
             $customDomain = empty($config['custom_domain']) ? '' : $config['custom_domain'];
             $urlSchema    = empty($config['url_schema']) ? 'both' : $config['url_schema'];
 
-            $client     = new OssClient($accessId, $accessKey, $endPoint, (bool)$customDomain);
+            $client     = new OssClient($accessId, $accessKey, $endPoint, $isCnname);
             $adapter    = new AliOSSAdapter($client, $bucket, $endPoint, $urlSchema, $customDomain);
             $filesystem = new Filesystem($adapter);
             $filesystem->addPlugin(new SignUrl());

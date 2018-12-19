@@ -19,7 +19,8 @@
              // 使用的url schema协议 可选项 http, https, both http=> 'http://url', https=>'https://url' both => '//url'
             'url_schema'        => env('ALI_OSS_URL_SCHEMA', 'http'), 
              // 如果使用了自定义域名 此处写入自定义域名 如果没有 则为空或者不写该项
-            'custom_domain'     => '', 
+            'is_cname'          => true 或者 false, 是否使用自定义域名 
+            'custom_domain'     => '', // 自定义域名 当is_cname为false时 这个也可以写 是生成url用的域名
         ],
         
         

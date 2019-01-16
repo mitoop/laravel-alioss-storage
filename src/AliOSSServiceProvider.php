@@ -5,6 +5,8 @@ namespace Mitoop\AliOSS;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Filesystem;
+use Mitoop\AliOSS\Plugins\PutRemoteFile;
+use Mitoop\AliOSS\Plugins\SignUrl;
 use OSS\OssClient;
 
 class AliOSSServiceProvider extends ServiceProvider

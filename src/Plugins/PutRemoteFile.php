@@ -1,6 +1,6 @@
 <?php
 
-namespace Mitoop\AliOSS;
+namespace Mitoop\AliOSS\Plugins;
 
 use League\Flysystem\Config;
 use League\Flysystem\Plugin\AbstractPlugin;

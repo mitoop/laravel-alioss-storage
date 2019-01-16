@@ -71,15 +71,8 @@ class AliOSSAdapter extends AbstractAdapter
 
     protected $customDomain;
 
-    public function __construct(
-        OssClient $client,
-        $bucket,
-        $endPoint,
-        $urlSchema,
-        $customDomain,
-        $prefix = null,
-        array $options = []
-    ) {
+    public function __construct(OssClient $client, $bucket, $endPoint, $urlSchema, $customDomain, $prefix = null, array $options = [])
+    {
         $this->client       = $client;
         $this->bucket       = $bucket;
         $this->endPoint     = $endPoint;

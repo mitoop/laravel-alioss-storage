@@ -1,36 +1,37 @@
-# Laravel AliyunOSS Storage Driver
+# Laravel filesystem Aliyun OSS
 
+Fork From [jacobcyl/Aliyun-oss-storage](https://github.com/jacobcyl/Aliyun-oss-storage)
+
+## 安装
 > composer require mitoop/laravel-alioss-storage
 
+Laravel5.5+ 开始支持包自动发现 如果低于5.5版本 请添加`Mitoop\AliOSS\AliOSSServiceProvider` 到 `config/app.php` 的 `providers` 数组
+
+## Require
+   - Laravel 5+
+   - cURL extension
+
+## 配置
+所有配置都在 `config/filesystems.php` 里
 ```
- 在 config/filesystems.php 的disk选项下加入 也可以修改默认驱动 default或者cloud 为oss 
+ 在 config/filesystems.php 的disk选项下加入oss
  
  'oss' => [
-             // 使用的驱动
-            'driver'            => 'oss', 
-             // 阿里云oss access_key_id
-            'access_key_id'     => env('ALI_OSS_ACCESS_ID', 'access_key_id'),
-             // 阿里云oss access_key_secret
-            'access_key_secret' => env('ALI_OSS_ACCESS_KEY', 'access_key_secret'),
-             // 阿里云oss endpoint
-            'endpoint'          => env('ALI_OSS_ENDPOINT', 'endpoint'),
-             // 阿里云oss bucket 
-            'bucket'            => env('ALI_OSS_BUCKET', 'bucket'), 
-             // 使用的url schema协议 可选项 http, https, both http=> 'http://url', https=>'https://url' both => '//url'
-            'url_schema'        => env('ALI_OSS_URL_SCHEMA', 'http'), 
-             // 如果使用了自定义域名 此处写入自定义域名 如果没有 则为空或者不写该项
-            'custom_domain'     => '', 
-        ],
-        
-        
-demo:
-Storage::disk('oss')->put('file.tetx', 'hello world');
-Storage::cloud()->put('file.tetx', 'hello world');
-如果是默认驱动
-Storage::put('file.tetx', 'hello world');
-只在laravel 5.7下作了测试 目前兼容Storage方法, 适配器新增了signUrl方法 去除了putFile方法
-对于getUrl方法作了调整, 去除了远端验证, 增加 url schema 兼容处理, 删除方法去除了远端验证(阿里云oss为原子操作, 没必要).
-```
-
-
-Fork From (jacobcyl/Aliyun-oss-storage)[https://github.com/jacobcyl/Aliyun-oss-storage]
+            'driver'            => 'oss', // 使用的驱动 必填
+            'access_key_id'     => env('ALI_OSS_ACCESS_ID', 'access_key_id'), // 阿里云oss access_key_id 必填
+            'access_key_secret' => env('ALI_OSS_ACCESS_KEY', 'access_key_secret'), // 阿里云oss access_key_secret 必填
+            'endpoint'          => env('ALI_OSS_ENDPOINT', 'endpoint'), // 阿里云oss endpoint 必填
+            'bucket'            => env('ALI_OSS_BUCKET', 'bucket'), // 阿里云oss bucket 必填
+            'url_schema'        => env('ALI_OSS_URL_SCHEMA', 'both'), // 使用的url schema协议 可选项 http, https, both(url为兼容模式: //url) 非必填 默认值为both
+            'is_cname'          => true 或者 false, 是否使用自定义域名 这个结合自己的阿里云配置 非必填
+            'custom_domain'     => '', // 自定义获取对象链接时候的域名 非必填
+ ],
+ 
+ 可以通过更改`default`配置为`oss` 设置`oss`为默认值
+```  
+      
+## 使用
+Laravel Storage API的所有方法
+两个插件提供的方法 :
+- signUrl 使用签名URL进行临时授权
+- putRemoteFile 将本地文件或者远程URL文件存储到oss

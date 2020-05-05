@@ -71,7 +71,7 @@ Laravel 版本低于5.5版本 请添加`Mitoop\AliOSS\ServiceProvider` 到 `conf
    
    曾经遇到过 `store` 方法生成随机名称获取扩展的时候，对于 WPS 的 docx/pptx, 总是获取不到正确的文件扩展名称
    
-   最后 `storeAs` 手动结局了.
+   最后 `storeAs` 手动解决了.
 
 5. `temporaryUrl` 方法和 `signUrl` 是一样的效果, 区别仅在于第二个参数
 

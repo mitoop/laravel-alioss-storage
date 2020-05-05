@@ -18,7 +18,7 @@ class PutRemoteFile extends AbstractPlugin
 
     public function handle($object, $remoteUrl, array $options = [])
     {
-        $resource = fopen($remoteUrl, 'rb');
+        $resource = fopen($remoteUrl, 'r');
 
         return $this->adapter->writeStream($object, $resource, new Config($options));
     }

@@ -52,17 +52,25 @@ Laravel 版本低于5.5版本 请添加`Mitoop\AliOSS\ServiceProvider` 到 `conf
   Demo: Storage::disk('oss')->putRemoteFile($path, $remoteUrl);
   ```
 
-需要注意的地方:
+## Notice
 
-`deleteDir` 删除文件夹方法. 方法直接返回为 false, 不会进行删除，如果要删除文件夹强烈推荐到阿里云后台操作.
+1. `deleteDir` 删除文件夹方法. 方法直接返回为 false, 不会进行删除，如果要删除文件夹强烈推荐到阿里云后台操作.
 
-`listContents` 列出文件夹目录(支持递归)方法. 方法直接返回为空数组 [], 如果有此业务，可以考虑通过插件实现.
+2. `listContents` 列出文件夹目录(支持递归)方法. 方法直接返回为空数组 [], 如果有此业务，可以考虑通过插件实现.
 
-几乎所有方法在失败的时候都会返回 false (不抛出异常，但有日志记录), 如果需要, 你可以用 === false 来判断是否成功.
+   几乎所有方法在失败的时候都会返回 false (不抛出异常，但有日志记录),
+   
+   如果需要, 你可以用 === false 来判断是否成功.
 
-`has` 方法, 本身返回 true / false, 所以发生错误会抛出异常，不过抛出异常概率非常非常低，通常是配置出现了问题.
+3. `has` 方法, 本身返回 true / false, 所以发生错误会抛出异常，不过抛出异常概率非常非常低，通常是配置出现了问题.
 
-更多：
+4. `$request->file('avatar')->store('avatars');` 上传文件直接 `store` 就生成随机名称，这里的 `avatars` 只是目录名称
+
+   所以推荐使用 `storeAs` 方法来达到预期的目的.
+   
+   曾经遇到过 `store` 方法生成随机名称获取扩展的时候，对于 WPS 的 docx/pptx, 总会识别失败.
+
+## More
 
 Storage方法通常会提供 `options` 参数. 最常用的就是设置文件可见性.
 
@@ -83,6 +91,8 @@ private 对应 OSS 的私有权限
 [https://github.com/laravel/framework/tree/7.x/src/Illuminate/Filesystem](https://github.com/laravel/framework/tree/7.x/src/Illuminate/Filesystem)
 
 [https://github.com/thephpleague/flysystem](https://github.com/thephpleague/flysystem)
+
+[https://help.aliyun.com/document_detail/32099.html](https://help.aliyun.com/document_detail/32099.html)
 
 [https://github.com/jacobcyl/Aliyun-oss-storage](https://github.com/jacobcyl/Aliyun-oss-storage)
 

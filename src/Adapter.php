@@ -42,9 +42,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * @var array options
      */
-    private $options = [
-        'Multipart' => 128,
-    ];
+    private $options = [];
 
     /**
      * View Aliyun OSS Setting.
@@ -54,6 +52,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     protected static $optionsMap = [
         'mimetype' => OssClient::OSS_CONTENT_TYPE, // alias of content-type.
         'content-type' => OssClient::OSS_CONTENT_TYPE,
+        'content-length' => OssClient::OSS_LENGTH,
         'content-encoding' => 'Content-Encoding',
         'content-language' => 'Content-Language',
         'content-disposition' => OssClient::OSS_CONTENT_DISPOSTION,
@@ -74,9 +73,10 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * write.
      *
-     * @param string $path
-     * @param string $contents
+     * @param  string  $path
+     * @param  string  $contents
      *
+     * @param  \League\Flysystem\Config  $config
      * @return array|bool|false
      */
     public function write($path, $contents, Config $config)
@@ -85,12 +85,16 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
 
         $options = $this->getOptions($config);
 
-        if (! isset($options[OssClient::OSS_LENGTH])) {
-            $options[OssClient::OSS_LENGTH] = Util::contentSize($contents);
-        }
-
         if (! isset($options[OssClient::OSS_CONTENT_TYPE])) {
             $options[OssClient::OSS_CONTENT_TYPE] = Util::guessMimeType($path, $contents);
+        }
+
+        if (! isset($options[OssClient::OSS_LENGTH])) {
+            $options[OssClient::OSS_LENGTH] = is_resource($contents) ? Util::getStreamSize($contents) : Util::contentSize($contents);
+        }
+
+        if ($options[OssClient::OSS_LENGTH] === null) {
+            unset($options['ContentLength']);
         }
 
         try {
@@ -107,9 +111,10 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * Write stream.
      *
-     * @param string   $path
-     * @param resource $resource
+     * @param  string  $path
+     * @param  resource  $resource
      *
+     * @param  \League\Flysystem\Config  $config
      * @return array|bool|false
      */
     public function writeStream($path, $resource, Config $config)
@@ -122,9 +127,10 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * Update, it's just overwritten.
      *
-     * @param string $path
-     * @param string $contents
+     * @param  string  $path
+     * @param  string  $contents
      *
+     * @param  \League\Flysystem\Config  $config
      * @return array|bool|false
      */
     public function update($path, $contents, Config $config)
@@ -135,9 +141,10 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * Write stream, it's just overwritten stream.
      *
-     * @param string   $path
-     * @param resource $resource
+     * @param  string  $path
+     * @param  resource  $resource
      *
+     * @param  \League\Flysystem\Config  $config
      * @return array|bool|false
      */
     public function updateStream($path, $resource, Config $config)
@@ -155,13 +162,11 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      */
     public function rename($path, $newpath)
     {
-        if (false === $this->copy($path, $newpath)) {
+        if ( ! $this->copy($path, $newpath)) {
             return false;
         }
 
-        $this->delete($path);
-
-        return true;
+        return $this->delete($path);
     }
 
     /**
@@ -228,15 +233,16 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * Create dir. Usually pre-create on Aliyun server.
      *
-     * @param string $dirname
+     * @param  string  $dirname
      *
+     * @param  \League\Flysystem\Config  $config
      * @return array|bool|false
      */
     public function createDir($dirname, Config $config)
     {
         $path = $this->applyPathPrefix($dirname);
 
-        $options = $this->getOptionsFromConfig($config);
+        $options = $this->getOptions($config);
 
         try {
             $this->client->createObjectDir($this->bucket, $path, $options);
@@ -328,7 +334,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
     public function readStream($path)
     {
         try {
-            $stream = fopen($this->getUrl($path), 'rb');
+            $stream = fopen($this->getUrl($path), 'r');
 
             return compact('stream');
         } catch (Throwable $t) {
@@ -524,7 +530,15 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
             $options = array_merge($options, $this->getOptionsFromConfig($config));
         }
 
-        return [OssClient::OSS_HEADERS => $options];
+        if(isset($options[OssClient::OSS_OBJECT_ACL])) {
+            $options[OssClient::OSS_HEADERS] = [
+                OssClient::OSS_OBJECT_ACL => $options[OssClient::OSS_OBJECT_ACL]
+            ];
+
+            unset($options[OssClient::OSS_OBJECT_ACL]);
+        }
+
+        return $options;
     }
 
     /**
@@ -532,6 +546,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
      *
      * @description In face, the commonest config setting is `visibility` and `mimetype`.
      *
+     * @param  \League\Flysystem\Config  $config
      * @return array
      */
     protected function getOptionsFromConfig(Config $config)
@@ -549,7 +564,7 @@ class Adapter extends AbstractAdapter implements CanOverwriteFiles
         }
 
         if ($visibility = $config->get('visibility')) {
-            $options['x-oss-object-acl'] = AdapterInterface::VISIBILITY_PUBLIC === $visibility ? OssClient::OSS_ACL_TYPE_PUBLIC_READ : OssClient::OSS_ACL_TYPE_PRIVATE;
+            $options[OssClient::OSS_OBJECT_ACL] = AdapterInterface::VISIBILITY_PUBLIC === $visibility ? OssClient::OSS_ACL_TYPE_PUBLIC_READ : OssClient::OSS_ACL_TYPE_PRIVATE;
         }
 
         return $options;

@@ -44,12 +44,13 @@ Laravel 版本低于5.5版本 请添加`Mitoop\AliOSS\ServiceProvider` 到 `conf
   ```
   使用签名URL进行临时授权(主要对私有对象使用). 
   
-  Demo: Storage::disk('oss')->signUrl($path, $timeout);
+  Storage::disk('oss')->signUrl($path, $timeout);
   ```
 - putRemoteFile 
   ```
   将本地文件或者远程URL文件存储到oss. 
-  Demo: Storage::disk('oss')->putRemoteFile($path, $remoteUrl);
+  
+  Storage::disk('oss')->putRemoteFile($path, $remoteUrl);
   ```
 
 ## Notice
@@ -58,17 +59,25 @@ Laravel 版本低于5.5版本 请添加`Mitoop\AliOSS\ServiceProvider` 到 `conf
 
 2. `listContents` 列出文件夹目录(支持递归)方法. 方法直接返回为空数组 [], 如果有此业务，可以考虑通过插件实现.
 
-   几乎所有方法在失败的时候都会返回 false (不抛出异常，但有日志记录),
+3. 除了 `has` 方法, 所有方法在失败的时候都会返回 false (不抛出异常，但有日志记录),
    
-   如果需要, 你可以用 === false 来判断是否成功.
+   如果需要, 你可以用 === false 来判断是否成功. 配置正常的情况下, 失败概率极低.
 
-3. `has` 方法, 本身返回 true / false, 所以发生错误会抛出异常，不过抛出异常概率非常非常低，通常是配置出现了问题.
+3. `has` 方法, 本身返回 true / false, 所以发生错误会抛出异常.
 
 4. `$request->file('avatar')->store('avatars');` 上传文件直接 `store` 就生成随机名称，这里的 `avatars` 只是目录名称
 
    所以推荐使用 `storeAs` 方法来达到预期的目的.
    
-   曾经遇到过 `store` 方法生成随机名称获取扩展的时候，对于 WPS 的 docx/pptx, 总会识别失败.
+   曾经遇到过 `store` 方法生成随机名称获取扩展的时候，对于 WPS 的 docx/pptx, 总是获取不到正确的文件扩展名称
+   
+   最后 `storeAs` 手动结局了.
+
+5. `temporaryUrl` 方法和 `signUrl` 是一样的效果, 区别仅在于第二个参数
+
+   `signUrl` 传入的 int 类型, 例如, 传入30表示30秒后过期
+   
+   `temporaryUrl` 传入的是 `\DateTimeInterface` 类型, 例如, 传入 now()->addSeconds(30) 也是表示30秒后过期
 
 ## More
 

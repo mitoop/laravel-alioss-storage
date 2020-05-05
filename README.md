@@ -58,7 +58,7 @@ Laravel 版本低于5.5版本 请添加`Mitoop\AliOSS\ServiceProvider` 到 `conf
 
 `listContents` 列出文件夹目录(支持递归)方法. 方法直接返回为空数组 [], 如果有此业务，可以考虑通过插件实现.
 
-几乎所有方法在失败的时候都会返回 false (不抛出异常，但有日志记录), s你可以用 === false 来判断是否成功.
+几乎所有方法在失败的时候都会返回 false (不抛出异常，但有日志记录), 如果需要, 你可以用 === false 来判断是否成功.
 
 `has` 方法, 本身返回 true / false, 所以发生错误会抛出异常，不过抛出异常概率非常非常低，通常是配置出现了问题.
 
@@ -68,7 +68,7 @@ Storage方法通常会提供 `options` 参数. 最常用的就是设置文件可
 
 设置可见性：
 ```
-// 只设置可见行，直接 public 就好了 方便
+// 只设置可见行，直接 public
 Storage::disk('oss')->put('file.jpg', $contents, 'public');
 或
 // 还有其他 option 配置时使用 ['visibility' => 'private']
@@ -79,9 +79,18 @@ private 对应 OSS 的私有权限
 不单独设置可见性, 默认继承 bucket 的可见性 
 ```
 
+## Links
+[https://github.com/laravel/framework/tree/7.x/src/Illuminate/Filesystem](https://github.com/laravel/framework/tree/7.x/src/Illuminate/Filesystem)
 
+[https://github.com/thephpleague/flysystem](https://github.com/thephpleague/flysystem)
 
-#### License
+[https://github.com/jacobcyl/Aliyun-oss-storage](https://github.com/jacobcyl/Aliyun-oss-storage)
+
+[https://github.com/thephpleague/flysystem-aws-s3-v3](https://github.com/thephpleague/flysystem-aws-s3-v3)
+
+[https://github.com/apollopy/flysystem-aliyun-oss](https://github.com/apollopy/flysystem-aliyun-oss)
+
+## License
 ```
         DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
                     Version 2, December 2004 

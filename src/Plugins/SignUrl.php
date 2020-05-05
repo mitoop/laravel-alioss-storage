@@ -2,12 +2,8 @@
 
 namespace Mitoop\AliOSS\Plugins;
 
-use League\Flysystem\Plugin\AbstractPlugin;
-use OSS\OssClient;
-
 class SignUrl extends AbstractPlugin
 {
-
     /**
      * Get the method name.
      *
@@ -18,8 +14,10 @@ class SignUrl extends AbstractPlugin
         return 'signUrl';
     }
 
-    public function handle($object, $timeout = 60 * 60 * 8, $method = OssClient::OSS_HTTP_GET)
+    public function handle($object, $timeout = 60 * 60 * 8, array $options = [])
     {
-        return $this->filesystem->getAdapter()->signUrl($object, $timeout, $method);
+        $expiration = now()->addSeconds($timeout);
+
+        return $this->adapter->getTemporaryUrl($object, $expiration, $options);
     }
 }

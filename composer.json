@@ -6,11 +6,12 @@
   "authors": [
     {
       "name": "mitoop",
-      "email": "037333@gmail.com"
+      "email": "gmitoop@gmail.com"
     }
   ],
   "require": {
-    "aliyuncs/oss-sdk-php": "^2.3.0"
+    "aliyuncs/oss-sdk-php": "^2.3.0",
+    "league/flysystem": "~1.0"
   },
   "autoload": {
     "psr-4": {

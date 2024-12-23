@@ -5,8 +5,10 @@
 
 Laravel 版本低于5.5版本 请添加`Mitoop\AliOSS\ServiceProvider` 到 `config/app.php` 的 `providers` 数组
 
+Laravel 9 起 依赖 `league/flysystem` 版本发生变化, 接口约束也发生了变化
+
 ## Require
-   - Laravel 5+
+   - > Laravel 5+ && < Laravel 9
 
 ## Configure
 在 `config/filesystems.php` 的 `disk`里增加配置:
